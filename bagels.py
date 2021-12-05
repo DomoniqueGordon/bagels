@@ -37,7 +37,7 @@ def get_clues(guess, secret_num):
         clues.sort()
         return ' '.join(clues)
 
-def main():
+def bagels():
     intro = get_text("intro.txt")
     print(intro.format(NUM_DIGITS))
 
@@ -71,9 +71,53 @@ def main():
 
 
 
+class Bagels:
+    @property
+    def title(self):
+        return "Bagels!"
 
+    @property
+    def intro(self):
+        intro = get_text("intro.txt")
+        return intro.format(NUM_DIGITS)
 
+    @property
+    def new_game_message(self):
+        return """
+        I have thought up a number.
+        You have {} guesses to get it right.""".format(MAX_GUESSES)
 
+    def set_secret_num(self):
+        numbers = list('0123456789')
+        random.shuffle(numbers)
+        secret_num = ""
+        for i in range(NUM_DIGITS):
+            secret_num += str(numbers[i])
+        with open("secret_num.txt", "w") as f:
+            f.write(secret_num)
 
-if __name__ == "__main__":
-    main()
+    @property
+    def secret_num(self):
+        with open("secret_num.txt") as f:
+            return f.read()
+
+    def get_clues(self, guess):
+        if guess == self.secret_num:
+            return "You got it!"
+
+        clues = []
+
+        for i in range(len(guess)):
+            if guess[i] == self.secret_num[i]:
+                # A correct digit is in the correct place.
+                clues.append("Fermi")
+            elif guess[i] in self.secret_num:
+                # A correct digit is in the incorrect place.
+                clues.append("Pico")
+        if len(clues) == 0:
+            return "Bagels"
+        else:
+            # Sort the clues into alphabetical order so their original order
+            # doesn't give information away
+            clues.sort()
+            return "Clue: " + ' '.join(clues)
