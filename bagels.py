@@ -121,3 +121,16 @@ class Bagels:
             # doesn't give information away
             clues.sort()
             return "Clue: " + ' '.join(clues)
+
+    def get_guess_count(self):
+        with open("guess_count.txt") as f:
+            return f.read()
+
+    def update_guess_count(self, guess_count):
+        with open("guess_count.txt", "w") as f:
+            guess_count = str(int(guess_count) + 1)
+            f.write(guess_count)
+
+    def reset_guess_count(self):
+        with open("guess_count.txt", "w") as f:
+            f.write("1")
