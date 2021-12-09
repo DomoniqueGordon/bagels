@@ -1,0 +1,30 @@
+version: '3.0'
+
+services:
+  streamlit:
+    container_name: bagels_streamlit
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8501:8501
+    volumes:
+      - './bagels:/bagels'
+  
+  mysql:
+    container_name: bagels_mysql
+    platform: linux:/x86_64
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: bagels
+      MYSQL_USER: bagels
+      MYSQL_PASSWORD: bagels
+      MYSQL_DATABASE: bagels
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: mysqladmin ping -h "host.docker.internal" -u bagels --password=bagels --port 3307
+      interval: 5s
+      retries: 24
+      start_period: 100s

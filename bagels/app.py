@@ -30,11 +30,3 @@ if st.button("Submit Guess"):
         else:
             bagels.update_guess_count(guess_count)
 
-
-
-
-
-
-
-
-
