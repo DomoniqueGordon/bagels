@@ -2,7 +2,7 @@ import logging
 import sqlalchemy as sa
 
 from sqlalchemy.orm import session, sessionmaker
-from sqlalchemy import select
+from sqlalchemy import select, update
 
 from database.models.base import Base, Games, SecretNumbers, Guesses
 from sqlalchemy import func
@@ -51,15 +51,26 @@ class DBSetup(DBConn):
         self._create_tables()
 
 
-class ApplicationDatabase(DBConn):
+class ApplicationDatabase(DBSetup):
     def add_row(self, row):
         session = self.get_session()
         session.add(row)
         session.commit()
+    
+    def run_query(self, query):
+        session = self.get_session()
+        session.execute(query)
+        session.commit()
 
-    def new_game(self, number=123):
-        game = Games(status="active", secret_numbers=[SecretNumbers(number=number)])
+    def start_game(self, number=123):
+        self.end_game()
+        game = Games(secret_numbers=[SecretNumbers(number=number)])
         self.add_row(game)
+
+    def end_game(self, outcome="L"):
+        query = update(Games).where(Games.active==1).values(active=0, outcome=outcome, ended_at=func.now())
+        self.run_query(query)
+        self.log.warning("Game has been ended.")
 
     def add_guess(self, number=123):
         session = self.get_session()
@@ -76,4 +87,7 @@ class ApplicationDatabase(DBConn):
 
 if __name__ == '__main__':
     db = ApplicationDatabase()
-    db.add_guess()
+    #db.reset()
+    #db.setup()
+    db.start_game()
+    #db.end_game()

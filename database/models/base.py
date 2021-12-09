@@ -18,7 +18,10 @@ class BaseMixin:
 
 
 class Games(BaseMixin, Base):
-    status = sa.Column(sa.VARCHAR(50))
+    ended_at = sa.Column(sa.TIMESTAMP)
+    active = sa.Column(sa.BOOLEAN, default=1)
+    outcome = sa.Column(sa.VARCHAR(1))
+
 
 
 class SecretNumbers(BaseMixin, Base):
