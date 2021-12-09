@@ -4,7 +4,8 @@ import sqlalchemy as sa
 from sqlalchemy.orm import session, sessionmaker
 from sqlalchemy import select
 
-from database.models.base import Base
+from database.models.base import Base, Games, SecretNumbers, Guesses
+from sqlalchemy import func
 
 
 logging.basicConfig()
@@ -33,6 +34,7 @@ class DBConn:
         Session = session.sessionmaker(bind=engine)
         return Session()
     
+    
 
 class DBSetup(DBConn):
     def _create_tables(self):
@@ -50,12 +52,28 @@ class DBSetup(DBConn):
 
 
 class ApplicationDatabase(DBConn):
-    pass
+    def add_row(self, row):
+        session = self.get_session()
+        session.add(row)
+        session.commit()
+
+    def new_game(self, number=123):
+        game = Games(status="active", secret_numbers=[SecretNumbers(number=number)])
+        self.add_row(game)
+
+    def add_guess(self, number=123):
+        session = self.get_session()
+        query = session.query(func.max(Games.id))
+        id = session.execute(query).fetchone()[0]
+        game_id = id
+        guess = Guesses(number=number, game_id=game_id)
+        self.add_row(guess)
+    
+    
 
 
 
 
 if __name__ == '__main__':
-    setup = DBSetup()
-    setup.reset()
-    setup.setup()
+    db = ApplicationDatabase()
+    db.add_guess()

@@ -31,4 +31,4 @@ class SecretNumbers(BaseMixin, Base):
 class Guesses(BaseMixin, Base):
     game_id = sa.Column(sa.INTEGER, sa.ForeignKey("bagels.games.id"))
     number = sa.Column(sa.INTEGER)
-    guesses = relationship("Guesses", backref="guesses")
+    guesses = relationship("Games", backref="guesses")
