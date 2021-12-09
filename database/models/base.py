@@ -26,10 +26,3 @@ class SecretNumbers(BaseMixin, Base):
     game_id = sa.Column(sa.INTEGER, sa.ForeignKey("bagels.games.id"))
     number = sa.Column(sa.INTEGER)
     games = relationship("Games", backref="secret_numbers")
-
-
-
-if __name__ == "__main__":
-    conn_string = "mysql+pymysql://bagels:bagels@localhost:3307/bagels"
-    engine = sa.create_engine(conn_string, echo=True)
-    Base.metadata.create_all(engine)
