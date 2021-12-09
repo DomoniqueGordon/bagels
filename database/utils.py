@@ -45,13 +45,17 @@ class DBSetup(DBConn):
         Base.metadata.drop_all(engine)
         engine.execute(f"DROP DATABASE IF EXISTS {self.database}")
 
-
     def setup(self):
         self._create_tables()
+
+
+class ApplicationDatabase(DBConn):
+    pass
+
 
 
 
 if __name__ == '__main__':
     setup = DBSetup()
+    setup.reset()
     setup.setup()
-    #setup.reset()

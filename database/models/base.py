@@ -18,7 +18,7 @@ class BaseMixin:
 
 
 class Games(BaseMixin, Base):
-    guess_count = sa.Column(sa.BIGINT)
+    status = sa.Column(sa.VARCHAR(50))
 
 
 class SecretNumbers(BaseMixin, Base):
@@ -26,3 +26,9 @@ class SecretNumbers(BaseMixin, Base):
     game_id = sa.Column(sa.INTEGER, sa.ForeignKey("bagels.games.id"))
     number = sa.Column(sa.INTEGER)
     games = relationship("Games", backref="secret_numbers")
+
+
+class Guesses(BaseMixin, Base):
+    game_id = sa.Column(sa.INTEGER, sa.ForeignKey("bagels.games.id"))
+    number = sa.Column(sa.INTEGER)
+    guesses = relationship("Guesses", backref="guesses")
