@@ -1,6 +1,6 @@
 import streamlit as st
 
-from bagels import Bagels
+from bagels.bagels import Bagels
 
 
 bagels = Bagels()
